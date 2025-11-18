@@ -1,0 +1,20 @@
+# Core Python scientific stack
+numpy
+pandas
+scikit-learn
+
+# Visualisation (utile pour EDA & confusion matrices)
+matplotlib
+seaborn
+
+# MLOps
+mlflow
+dvc
+
+# API pour servir le modèle
+fastapi
+uvicorn[standard]
+
+# Utilitaires
+joblib
+python-dotenv
