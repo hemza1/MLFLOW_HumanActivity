@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\hp\Downloads\MLFLOW_HumanActivity\.venv
+set VIRTUAL_ENV=D:\Projet_ML\.venv
 
 if not defined PROMPT set PROMPT=$P$G
 
