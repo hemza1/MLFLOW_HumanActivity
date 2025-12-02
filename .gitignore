@@ -8,5 +8,4 @@ Notebook/.ipynb_checkpoints/
 .ipynb_checkpoints/
 .dvc/cache/
 .dvc/tmp/
-data/processed/*
 data/processed/
