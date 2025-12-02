@@ -1,6 +1,7 @@
 from pathlib import Path
 import numpy as np
 import joblib
+import matplotlib.pyplot as plt
 
 from lime.lime_tabular import LimeTabularExplainer
 
@@ -85,10 +86,18 @@ for feat, weight in exp.as_list():
     print(f"{feat}: {weight:.4f}")
 
 # ============================================================
-# 6. Save Result
+# 6. Save HTML + PNG (summary-style)
 # ============================================================
+# HTML interactif
 out_html = RESULTS_DIR / f"lime_explanation_{idx}.html"
 exp.save_to_file(str(out_html))
-
 print(f"\n✔ LIME HTML saved at: {out_html}")
-print("Open this file in a browser 🔥")
+
+# PNG statique façon "summary"
+fig = exp.as_pyplot_figure()
+png_path = RESULTS_DIR / "lime_summary.png"   # même esprit que shap_summary.png
+fig.savefig(png_path, dpi=250, bbox_inches="tight")
+plt.close(fig)
+
+print(f"✔ LIME PNG saved at: {png_path}")
+print("Tu peux l'ajouter direct dans ton rapport 🔥")
