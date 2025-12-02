@@ -1,6 +1,7 @@
 # src/data/preprocessing.py
 
 from pathlib import Path
+from typing import Optional
 import numpy as np
 import pandas as pd
 import joblib
@@ -30,24 +31,28 @@ def load_raw_har():
     # Train
     X_train = pd.read_csv(
         RAW_DIR / "train" / "X_train.txt",
-        delim_whitespace=True,
+        sep=r"\s+",
+        engine="python",
         header=None,
     )
     y_train = pd.read_csv(
         RAW_DIR / "train" / "y_train.txt",
-        delim_whitespace=True,
+        sep=r"\s+",
+        engine="python",
         header=None,
     )[0].to_numpy()
 
     # Test
     X_test = pd.read_csv(
         RAW_DIR / "test" / "X_test.txt",
-        delim_whitespace=True,
+        sep=r"\s+",
+        engine="python",
         header=None,
     )
     y_test = pd.read_csv(
         RAW_DIR / "test" / "y_test.txt",
-        delim_whitespace=True,
+        sep=r"\s+",
+        engine="python",
         header=None,
     )[0].to_numpy()
 
@@ -65,7 +70,7 @@ def load_raw_har():
     return X_full, y_full, feature_names
 
 
-def save_processed(X_full, y_full, out_dir: Path | None = None):
+def save_processed(X_full, y_full, out_dir: Optional[Path] = None):
     """
     Sauvegarde X_full et y_full en .joblib dans data/processed.
     """
