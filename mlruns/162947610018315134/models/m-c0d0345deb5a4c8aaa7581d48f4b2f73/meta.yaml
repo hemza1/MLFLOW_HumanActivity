@@ -1,0 +1,10 @@
+artifact_location: file:///D:/Projet_ML/MLFLOW_HumanActivity/mlruns/162947610018315134/models/m-c0d0345deb5a4c8aaa7581d48f4b2f73/artifacts
+creation_timestamp: 1764701349713
+experiment_id: '162947610018315134'
+last_updated_timestamp: 1764701355521
+model_id: m-c0d0345deb5a4c8aaa7581d48f4b2f73
+model_type: null
+name: model
+source_run_id: 48c9a9b5412c42dd8efc9633e6351af2
+status: 2
+status_message: null
