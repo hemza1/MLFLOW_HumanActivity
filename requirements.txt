@@ -18,3 +18,8 @@ uvicorn[standard]
 # Utilitaires
 joblib
 python-dotenv
+
+lime
+shap
+
+tensorflow
