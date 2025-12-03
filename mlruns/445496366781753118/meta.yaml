@@ -1,0 +1,6 @@
+artifact_location: file:///D:/Projet_ML/MLFLOW_HumanActivity/src/mlruns/445496366781753118
+creation_time: 1764796838989
+experiment_id: '445496366781753118'
+last_update_time: 1764796838989
+lifecycle_stage: active
+name: HAR_03_RandomForest_Baseline

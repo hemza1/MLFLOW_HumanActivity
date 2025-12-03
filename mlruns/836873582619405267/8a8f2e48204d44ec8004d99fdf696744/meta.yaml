@@ -1,0 +1,14 @@
+artifact_uri: file:///D:/Projet_ML/MLFLOW_HumanActivity/src/mlruns/836873582619405267/8a8f2e48204d44ec8004d99fdf696744/artifacts
+end_time: 1764796848832
+entry_point_name: ''
+experiment_id: '836873582619405267'
+lifecycle_stage: active
+run_id: 8a8f2e48204d44ec8004d99fdf696744
+run_name: run_1
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764796848232
+status: 3
+tags: []
+user_id: ASUS

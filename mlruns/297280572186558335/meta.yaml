@@ -1,0 +1,6 @@
+artifact_location: file:///D:/Projet_ML/MLFLOW_HumanActivity/src/mlruns/297280572186558335
+creation_time: 1764796840809
+experiment_id: '297280572186558335'
+last_update_time: 1764796840809
+lifecycle_stage: active
+name: HAR_04_KNN_Baseline
