@@ -1,0 +1,5 @@
+outs:
+- md5: a6f44a1aa9e95a8fd1b08a1445a80e9b
+  size: 82617
+  hash: md5
+  path: y_full.joblib
