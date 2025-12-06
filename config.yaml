@@ -1,0 +1,15 @@
+
+
+project_name: "HAR SVM API"
+description: "API de prédiction d'activité humaine (UCI HAR) avec SVM RBF"
+
+models_dir: "models"
+
+svm_model_filename: "svm_rbf_best.joblib"
+scaler_filename: "scaler.joblib"
+labels_filename: "activity_labels.joblib"
+
+n_features: 561
+
+api:
+  base_url: "http://127.0.0.1:8000"

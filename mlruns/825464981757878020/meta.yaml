@@ -1,0 +1,6 @@
+artifact_location: file:///D:/Projet_ML/MLFLOW_HumanActivity/src/mlruns/825464981757878020
+creation_time: 1764796842622
+experiment_id: '825464981757878020'
+last_update_time: 1764796842622
+lifecycle_stage: active
+name: HAR_05_MLP_Baseline
