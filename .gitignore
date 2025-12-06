@@ -11,3 +11,5 @@ Notebook/.ipynb_checkpoints/
 data/processed/*
 !data/processed/*.dvc
 !data/processed/.gitkeep
+models/*
+!models/*.dvc
