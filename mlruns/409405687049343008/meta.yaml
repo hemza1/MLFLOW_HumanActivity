@@ -1,0 +1,6 @@
+artifact_location: file:///D:/Projet_ML/MLFLOW_HumanActivity/src/mlruns/409405687049343008
+creation_time: 1764796837208
+experiment_id: '409405687049343008'
+last_update_time: 1764796837208
+lifecycle_stage: active
+name: HAR_02_SVM_RBF_Baseline
