@@ -257,7 +257,7 @@ dvc repro
 ###  DVC Remote Storage (AWS S3)
 
 **Note**: To access DVC remote storage on Amazon S3, you must:
-1. Install the AWS CLI: `pip install awscli`
+1. Install the AWS CLI (standalone tool, not a Python package). Follow the official instructions: [AWS CLI Installation Guide](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 2. Configure AWS credentials:
     ```bash
     aws configure
