@@ -341,5 +341,5 @@ For questions or collaboration:
 - GitHub:
 [@NassimBnslmn](https://github.com/NassimBnslmn)
 [@hemza1](https://github.com/hemza1)
-[@ilyassox](@https://github.com/ilyassox)
+[@ilyassox](https://github.com/ilyassox)
 - Project: [MLFLOW_HumanActivity](https://github.com/hemza1/MLFLOW_HumanActivity)
