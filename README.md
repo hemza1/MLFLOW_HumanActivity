@@ -42,7 +42,7 @@ MLFLOW_HumanActivity/
 │   ├── models/
 │   │   ├── train_baselines.py
 │   │   ├── evaluation.py
-│   ├── explianability/
+│   ├── explainability/
 │   │   ├── LIME_Explainer.py
 │   │   ├── SHAP_Explainer.py
 │
