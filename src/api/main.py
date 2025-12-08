@@ -1,3 +1,14 @@
+"""
+FastAPI service for real-time Human Activity Recognition predictions.
+
+Exposes two endpoints:
+- `/predict`: returns predicted activity class IDs and labels
+- `/predict_proba`: returns probability distributions over all classes
+
+Configuration and model artifacts (SVM, scaler, labels) are loaded from
+paths specified in `config.yaml` at startup.
+"""
+
 from pathlib import Path
 from typing import List, Dict
 
@@ -8,6 +19,9 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 
+# ────────────────────────────────────────────────────────────────────────────────
+# Configuration & Artifact Loading
+# ────────────────────────────────────────────────────────────────────────────────
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -25,44 +39,58 @@ LABELS_PATH = MODELS_DIR / cfg["labels_filename"]
 N_FEATURES = int(cfg["n_features"])
 
 
+def _load_artifacts():
+    """Load SVM model, scaler, and label mappings from disk."""
+    print(f"Loading model from {SVM_MODEL_PATH}")
+    if not SVM_MODEL_PATH.exists():
+        raise RuntimeError(f"Model file not found: {SVM_MODEL_PATH}")
+    if not SCALER_PATH.exists():
+        raise RuntimeError(f"Scaler file not found: {SCALER_PATH}")
+    if not LABELS_PATH.exists():
+        raise RuntimeError(f"Labels file not found: {LABELS_PATH}")
 
-print(f"Loading model from {SVM_MODEL_PATH}")
-if not SVM_MODEL_PATH.exists():
-    raise RuntimeError(f"Model file not found: {SVM_MODEL_PATH}")
+    _model = joblib.load(SVM_MODEL_PATH)
+    _scaler = joblib.load(SCALER_PATH)
+    _labels: Dict[int, str] = joblib.load(LABELS_PATH)
+    return _model, _scaler, _labels
 
-if not SCALER_PATH.exists():
-    raise RuntimeError(f"Scaler file not found: {SCALER_PATH}")
 
-if not LABELS_PATH.exists():
-    raise RuntimeError(f"Labels file not found: {LABELS_PATH}")
-
-model = joblib.load(SVM_MODEL_PATH)
-scaler = joblib.load(SCALER_PATH)
-activity_labels: Dict[int, str] = joblib.load(LABELS_PATH)
-
+model, scaler, activity_labels = _load_artifacts()
 model_classes = model.classes_
 class_labels_ordered = [activity_labels[int(c)] for c in model_classes]
 
 
+# ────────────────────────────────────────────────────────────────────────────────
+# Request/Response Schemas
+# ────────────────────────────────────────────────────────────────────────────────
+
 
 class Instance(BaseModel):
+    """Single observation with 561 sensor features."""
     features: List[float]
 
 
 class PredictRequest(BaseModel):
+    """Batch of instances to classify."""
     instances: List[Instance]
 
 
 class PredictResponse(BaseModel):
+    """Predicted class IDs and human-readable labels."""
     predictions: List[int]
     labels: List[str]
 
 
 class PredictProbaResponse(BaseModel):
-    probabilities: List[List[float]]  
+    """Probability distribution over all activity classes per instance."""
+    probabilities: List[List[float]]
     class_ids: List[int]
     class_labels: List[str]
 
+
+# ────────────────────────────────────────────────────────────────────────────────
+# FastAPI Application
+# ────────────────────────────────────────────────────────────────────────────────
 
 app = FastAPI(
     title=cfg.get("project_name", "HAR SVM API"),
@@ -76,9 +104,8 @@ app = FastAPI(
 
 @app.get("/")
 def root():
-    """
-    Endpoint de santé / info.
-    """
+    """Health check and usage information endpoint."""
+    # Endpoint de santé / info.
     return {
         "message": "HAR SVM API is running",
         "n_features_expected": N_FEATURES,
@@ -88,8 +115,10 @@ def root():
 
 @app.post("/predict", response_model=PredictResponse)
 def predict(payload: PredictRequest):
-    """
-    Prédiction de la classe pour une ou plusieurs instances.
+    """Classify one or more instances and return activity labels.
+    
+    Expects a batch of feature vectors, each with 561 values.
+    Returns predicted class IDs and corresponding activity names.
     """
     if len(payload.instances) == 0:
         raise HTTPException(status_code=400, detail="No instances provided")
@@ -116,8 +145,10 @@ def predict(payload: PredictRequest):
 
 @app.post("/predict_proba", response_model=PredictProbaResponse)
 def predict_proba(payload: PredictRequest):
-    """
-    Retourne la distribution de probabilité sur les classes pour chaque instance.
+    """Return class probability distributions for each instance.
+    
+    Useful for confidence scoring and uncertainty estimation.
+    Output includes probabilities, class IDs, and ordered class labels.
     """
     if len(payload.instances) == 0:
         raise HTTPException(status_code=400, detail="No instances provided")
