@@ -1,4 +1,9 @@
-# src/models/evaluation.py
+"""
+Evaluation utilities for trained HAR models.
+
+Functions cover loading artifacts, computing metrics (accuracy, CM, ROC),
+and saving plots under `results/figures`.
+"""
 
 from pathlib import Path
 from typing import Sequence
@@ -31,9 +36,7 @@ FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def load_activity_labels():
-    """
-    Charge le fichier activity_labels.txt pour avoir les noms des classes.
-    """
+    """Load activity label names from UCI HAR metadata (id -> label)."""
     labels_path = (
         PROJECT_ROOT
         / "data"
@@ -56,9 +59,12 @@ def evaluate_model(
     class_names: Sequence[str] | None = None,
     prefix: str = "baseline",
 ):
-    """
-    Calcule accuracy, matrice de confusion, classification_report,
-    courbes ROC multi-classe et sauvegarde les figures.
+    """Compute metrics/plots for a fitted classifier.
+
+    Returns
+    -------
+    dict
+        accuracy, confusion matrix, and paths to saved CM/ROC figures.
     """
     y_pred = model.predict(X_test)
     acc = accuracy_score(y_test, y_pred)
@@ -96,9 +102,7 @@ def evaluate_model(
 
 
 def plot_confusion_matrix(cm, class_names, out_path: Path):
-    """
-    Trace et sauvegarde la matrice de confusion.
-    """
+    """Render and save a confusion matrix heatmap."""
     plt.figure(figsize=(7, 6))
     sns.heatmap(
         cm,
@@ -120,9 +124,7 @@ def plot_confusion_matrix(cm, class_names, out_path: Path):
 
 
 def plot_multiclass_roc(y_true, y_score, classes, class_names, out_path: Path):
-    """
-    Trace les courbes ROC multi-classe (one-vs-rest) et les sauvegarde.
-    """
+    """Render and save one-vs-rest multiclass ROC curves."""
     y_bin = label_binarize(y_true, classes=classes)
     n_classes = y_bin.shape[1]
 
@@ -156,9 +158,7 @@ def plot_multiclass_roc(y_true, y_score, classes, class_names, out_path: Path):
 
 
 def load_best_model_name() -> str:
-    """
-    Lit le nom du meilleur modèle sauvegardé dans results/best_model_name.txt.
-    """
+    """Read best model name from `results/best_model_name.txt`."""
     best_name_path = RESULTS_DIR / "best_model_name.txt"
     if not best_name_path.exists():
         raise FileNotFoundError(
@@ -171,12 +171,7 @@ def load_best_model_name() -> str:
 
 
 def main(best_name: str | None = None):
-    """
-    Script d'évaluation :
-    - charge le meilleur modèle sauvegardé
-    - charge X_test / y_test sauvegardés
-    - calcule accuracy, CM, ROC et sauvegarde les figures.
-    """
+    """CLI entrypoint to evaluate the saved best model and emit plots."""
     # 1) Déterminer le nom du meilleur modèle
     if best_name is None:
         best_name = load_best_model_name()

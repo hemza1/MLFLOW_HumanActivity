@@ -1,11 +1,20 @@
+"""
+Generate a sample CSV dataset from UCI HAR test split for Streamlit demo.
+
+Builds a DataFrame with subject IDs, activity labels, and 561 sensor features,
+then samples a subset (default: 200 rows) for lightweight loading in the UI.
+
+Output: `data/sample_har_examples.csv`
+"""
+
 import numpy as np
 import pandas as pd
 from pathlib import Path
 
 
 def main():
-    # 1) Localiser la racine du projet
-    # src/utils -> src -> (racine du projet)
+    """Extract and sample UCI HAR test data into a demo-ready CSV."""
+    # Localiser la racine du projet: src/api -> src -> project_root
     project_root = Path(__file__).resolve().parents[2]
     print(f"Project root = {project_root}")
 
@@ -29,6 +38,7 @@ def main():
     feature_names = features[:, 1].tolist()
 
     def clean_name(name: str) -> str:
+        """Sanitize feature names for CSV column headers."""
         return (
             name.replace("(", "")
             .replace(")", "")
