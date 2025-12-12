@@ -1,4 +1,12 @@
-# src/models/train_baselines.py
+"""
+Baseline model training with GridSearchCV and MLflow logging for HAR.
+
+Steps:
+- load processed features/labels
+- define simple model pipelines + grids
+- run GridSearchCV per model with MLflow tracking
+- persist best estimator and its name for downstream evaluation
+"""
 
 from pathlib import Path
 
@@ -20,24 +28,20 @@ import mlflow.sklearn
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
-MLRUNS_DIR = PROJECT_ROOT / "mlruns"
+TRACKING_URI = "http://ec2-16-171-234-189.eu-north-1.compute.amazonaws.com:5000"
 RESULTS_DIR = PROJECT_ROOT / "results"
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def load_processed():
-    """
-    Charge X_full et y_full depuis data/processed.
-    """
+    """Load processed feature/label arrays from `data/processed`."""
     X_full = joblib.load(PROCESSED_DIR / "X_full.joblib")
     y_full = joblib.load(PROCESSED_DIR / "y_full.joblib")
     return X_full, y_full
 
 
 def get_baseline_models(random_state: int = 42):
-    """
-    Définit les modèles de base + grilles d'hyperparamètres.
-    """
+    """Define baseline pipelines and hyperparameter grids."""
     models = {}
 
     # Logistic Regression (multiclasse)
@@ -103,20 +107,19 @@ def get_baseline_models(random_state: int = 42):
 
 
 def setup_mlflow():
-    """
-    Configure MLflow avec un dossier local mlruns.
-    """
-    MLRUNS_DIR.mkdir(parents=True, exist_ok=True)
-    tracking_uri = MLRUNS_DIR.as_uri()
-    mlflow.set_tracking_uri(tracking_uri)
+    """Configure MLflow tracking against the shared remote server."""
+    mlflow.set_tracking_uri(TRACKING_URI)
     mlflow.set_experiment("HAR_baselines")
-    print("MLflow tracking URI =", tracking_uri)
+    print("MLflow tracking URI =", TRACKING_URI)
 
 
 def run_grid_search(X_train, y_train, X_test, y_test, cv: int = 3, n_jobs: int = -1):
-    """
-    Lance une GridSearchCV pour chaque modèle.
-    Log tout dans MLflow et retourne un dict de résultats.
+    """Run GridSearchCV per baseline model and log to MLflow.
+
+    Returns
+    -------
+    dict
+        Mapping model name -> grid object, best estimator/params, CV score, test accuracy.
     """
     setup_mlflow()
     models = get_baseline_models()
@@ -165,15 +168,14 @@ def run_grid_search(X_train, y_train, X_test, y_test, cv: int = 3, n_jobs: int =
 
 
 def train_baselines(test_size: float = 0.2, random_state: int = 42):
-    """
-    Pipeline complet :
-    - charge X_full / y_full
-    - split train/test
-    - sauvegarde X_test / y_test
-    - lance la grid search pour tous les modèles
-    - sauvegarde le meilleur modèle
-    - sauvegarde le nom du meilleur modèle dans results/best_model_name.txt
-    - retourne (results, best_name)
+    """End-to-end baseline training with persistence and MLflow logging.
+
+    Returns
+    -------
+    results : dict
+        Grid search outputs keyed by model name.
+    best_name : str
+        Name of the best-performing model on the held-out test split.
     """
     X_full, y_full = load_processed()
 
